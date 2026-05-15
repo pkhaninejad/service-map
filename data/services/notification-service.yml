@@ -1,0 +1,16 @@
+id: notification-service
+name: Notification Service
+area: platform
+kind: backend
+status: In Progress
+owner: Platform Team
+tech: [Node.js, TypeScript, SQS]
+summary: Consumes domain events and dispatches transactional emails and SMS messages via third-party providers.
+depends_on:
+  - target: sendgrid
+    kind: sync-http
+    via: SendGrid API v3
+  - target: twilio
+    kind: sync-http
+    via: Twilio Messaging API
+related: [order-service, fulfillment-api]

@@ -1,0 +1,101 @@
+# viz.config.example.yml
+# Copy this file to viz.config.yml and customise it for your team.
+# viz.config.yml is gitignored — only the example is tracked.
+
+# Path to the directory containing service YAML files (relative to repo root).
+dataDir: ./data
+
+areas:
+  - id: checkout
+    label: Checkout
+    color: { bg: "#eff6ff", border: "#2563eb", text: "#1d4ed8", pill: "#dbeafe" }
+  - id: catalog
+    label: Catalog
+    color: { bg: "#f5f3ff", border: "#7c3aed", text: "#6d28d9", pill: "#ede9fe" }
+  - id: fulfillment
+    label: Fulfillment
+    color: { bg: "#ecfeff", border: "#0891b2", text: "#0e7490", pill: "#cffafe" }
+  - id: identity
+    label: Identity
+    color: { bg: "#fdf2f8", border: "#db2777", text: "#be185d", pill: "#fce7f3" }
+  - id: mobile
+    label: Mobile
+    color: { bg: "#f0fdf4", border: "#16a34a", text: "#15803d", pill: "#dcfce7" }
+  - id: platform
+    label: Platform
+    color: { bg: "#fff7ed", border: "#ea580c", text: "#c2410c", pill: "#fed7aa" }
+  - id: legacy
+    label: Legacy
+    color: { bg: "#fafaf9", border: "#78716c", text: "#57534e", pill: "#f5f5f4" }
+  - id: external
+    label: External
+    color: { bg: "#f8fafc", border: "#94a3b8", text: "#64748b", pill: "#f1f5f9" }
+
+kinds:
+  - id: frontend
+    label: Frontend
+    icon: "⬡"
+  - id: backend
+    label: Backend
+    icon: "λ"
+  - id: bff
+    label: BFF
+    icon: "⇌"
+  - id: library
+    label: Library
+    icon: "◈"
+  - id: infra
+    label: Infra
+    icon: "☁"
+  - id: mobile
+    label: Mobile
+    icon: "⬜"
+  - id: test
+    label: Test
+    icon: "✓"
+  - id: external
+    label: External
+    icon: "○"
+
+statuses:
+  - Planning
+  - In Progress
+  - On Hold
+  - Done
+  - Done / Maintenance
+  - Deprecated
+  - Being Migrated
+
+edgeKinds:
+  - id: sync-http
+    label: HTTP
+    color: "#1e293b"
+  - id: async-event
+    label: Async Event
+    color: "#7c3aed"
+    dashed: true
+    animated: true
+  - id: database-read
+    label: DB Read
+    color: "#059669"
+  - id: database-write
+    label: DB Write
+    color: "#dc2626"
+  - id: shared-lib
+    label: Shared Lib
+    color: "#94a3b8"
+    dashed: true
+  - id: replaces
+    label: Replaces
+    color: "#d97706"
+  - id: deprecates
+    label: Deprecates
+    color: "#cbd5e1"
+    dashed: true
+  - id: consumes
+    label: Consumes
+    color: "#0891b2"
+  - id: publishes
+    label: Publishes
+    color: "#0891b2"
+    dashed: true

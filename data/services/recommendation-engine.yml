@@ -1,0 +1,13 @@
+id: recommendation-engine
+name: Recommendation Engine
+area: catalog
+kind: backend
+status: In Progress
+owner: Catalog Team
+tech: [Python, PostgreSQL]
+summary: Generates personalised product recommendations using collaborative filtering on purchase and browse history.
+depends_on:
+  - target: product-catalog-api
+    kind: database-read
+    via: Read replica
+related: [catalog-bff]

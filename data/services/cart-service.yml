@@ -1,0 +1,10 @@
+id: cart-service
+name: Cart Service
+area: checkout
+kind: backend
+status: In Progress
+owner: Checkout Team
+tech: [Go, Redis]
+summary: Manages shopping cart state — adding, removing, and updating line items. Uses Redis for session-based storage.
+depends_on: []
+related: [checkout-bff, mobile-bff]

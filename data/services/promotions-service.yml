@@ -1,0 +1,10 @@
+id: promotions-service
+name: Promotions Service
+area: checkout
+kind: backend
+status: In Progress
+owner: Checkout Team
+tech: [Python, PostgreSQL]
+summary: Manages discount codes, campaign rules, and automatic promotions. Evaluated at checkout time via the BFF.
+depends_on: []
+related: [checkout-bff]

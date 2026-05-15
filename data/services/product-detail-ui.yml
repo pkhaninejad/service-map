@@ -1,0 +1,15 @@
+id: product-detail-ui
+name: Product Detail UI
+area: catalog
+kind: frontend
+status: In Progress
+owner: Catalog Team
+tech: [React, TypeScript]
+summary: Product detail page — images, description, variants, add-to-cart. Pulls live inventory from Catalog BFF.
+depends_on:
+  - target: catalog-bff
+    kind: sync-http
+    via: REST
+  - target: design-system
+    kind: shared-lib
+related: [product-listing-ui, catalog-bff]

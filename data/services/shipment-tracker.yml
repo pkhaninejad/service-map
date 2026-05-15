@@ -1,0 +1,13 @@
+id: shipment-tracker
+name: Shipment Tracker
+area: fulfillment
+kind: backend
+status: In Progress
+owner: Fulfillment Team
+tech: [Node.js, TypeScript]
+summary: Polls logistics provider APIs for parcel status updates and emits tracking events to downstream services.
+depends_on:
+  - target: twilio
+    kind: async-event
+    via: SMS delivery notifications
+related: [fulfillment-api]

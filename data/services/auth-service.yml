@@ -1,0 +1,13 @@
+id: auth-service
+name: Auth Service
+area: identity
+kind: backend
+status: Done / Maintenance
+owner: Platform Team
+tech: [Go, PostgreSQL, Redis]
+summary: Issues and validates JWT access tokens. Handles login, logout, token refresh, and OAuth2 social login flows.
+depends_on:
+  - target: user-permissions
+    kind: sync-http
+    via: gRPC
+related: [user-permissions, checkout-bff, mobile-bff]

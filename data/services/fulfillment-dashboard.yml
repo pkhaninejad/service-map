@@ -1,0 +1,15 @@
+id: fulfillment-dashboard
+name: Fulfillment Dashboard
+area: fulfillment
+kind: frontend
+status: In Progress
+owner: Fulfillment Team
+tech: [React, TypeScript]
+summary: Internal tool for warehouse staff to view, prioritise, and manage pending fulfilment tasks.
+depends_on:
+  - target: fulfillment-api
+    kind: sync-http
+    via: REST
+  - target: design-system
+    kind: shared-lib
+related: [fulfillment-api]

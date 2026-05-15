@@ -1,0 +1,13 @@
+id: payment-gateway
+name: Payment Gateway
+area: checkout
+kind: backend
+status: In Progress
+owner: Checkout Team
+tech: [Node.js, TypeScript]
+summary: Abstracts payment provider integrations. Routes card, wallet, and BNPL transactions through the appropriate processor.
+depends_on:
+  - target: stripe
+    kind: sync-http
+    via: Stripe API v3
+related: [order-service]

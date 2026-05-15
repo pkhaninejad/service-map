@@ -1,0 +1,16 @@
+id: fulfillment-api
+name: Fulfillment API
+area: fulfillment
+kind: backend
+status: In Progress
+owner: Fulfillment Team
+tech: [Go, PostgreSQL]
+summary: Coordinates warehouse pick-pack-ship operations. Receives orders from Order Service and dispatches to logistics providers.
+depends_on:
+  - target: shipment-tracker
+    kind: sync-http
+    via: REST
+  - target: notification-service
+    kind: async-event
+    via: Fulfilment events (SQS)
+related: [order-service, shipment-tracker, fulfillment-dashboard]

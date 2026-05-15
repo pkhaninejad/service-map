@@ -1,0 +1,12 @@
+id: legacy-order-processor
+name: Legacy Order Processor
+area: legacy
+kind: backend
+status: Deprecated
+owner: Checkout Team
+tech: [Java, Oracle DB]
+summary: Original order management system. Fully replaced by Order Service; retained for historical order data access only.
+depends_on:
+  - target: order-service
+    kind: replaces
+related: [order-service]

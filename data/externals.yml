@@ -1,0 +1,49 @@
+# External systems Nexmart integrates with but does not own.
+
+- id: stripe
+  name: Stripe
+  area: external
+  kind: external
+  external: true
+  summary: Payment processing for card, wallet, and BNPL transactions.
+  depends_on: []
+
+- id: sendgrid
+  name: SendGrid
+  area: external
+  kind: external
+  external: true
+  summary: Transactional email delivery — order confirmations, shipping updates, account notifications.
+  depends_on: []
+
+- id: twilio
+  name: Twilio
+  area: external
+  kind: external
+  external: true
+  summary: SMS delivery for shipment tracking notifications and two-factor authentication.
+  depends_on: []
+
+- id: google-analytics
+  name: Google Analytics
+  area: external
+  kind: external
+  external: true
+  summary: Web analytics and event tracking for customer-facing storefronts.
+  depends_on: []
+
+- id: aws-s3-assets
+  name: AWS S3 (Assets)
+  area: external
+  kind: external
+  external: true
+  summary: Object storage for product images and static media assets.
+  depends_on: []
+
+- id: algolia
+  name: Algolia
+  area: external
+  kind: external
+  external: true
+  summary: Hosted search index powering product discovery and autocomplete.
+  depends_on: []

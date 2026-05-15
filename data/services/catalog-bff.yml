@@ -1,0 +1,16 @@
+id: catalog-bff
+name: Catalog BFF
+area: catalog
+kind: bff
+status: In Progress
+owner: Catalog Team
+tech: [Node.js, TypeScript]
+summary: Backend-for-frontend serving the product listing and detail pages. Aggregates catalog and recommendation data.
+depends_on:
+  - target: product-catalog-api
+    kind: sync-http
+    via: REST
+  - target: recommendation-engine
+    kind: sync-http
+    via: REST
+related: [product-listing-ui, product-detail-ui]

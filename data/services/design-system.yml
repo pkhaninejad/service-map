@@ -1,0 +1,10 @@
+id: design-system
+name: Design System
+area: platform
+kind: library
+status: In Progress
+owner: Platform Team
+tech: [React, TypeScript, Storybook]
+summary: Shared component library and design tokens used across all customer-facing and internal web applications.
+depends_on: []
+related: [checkout-web, product-listing-ui, product-detail-ui, fulfillment-dashboard]

@@ -1,0 +1,12 @@
+id: checkout-e2e
+name: Checkout E2E Tests
+area: checkout
+kind: test
+status: In Progress
+owner: Checkout Team
+tech: [Cypress, TypeScript]
+summary: End-to-end test suite covering the full checkout journey from cart to order confirmation.
+depends_on:
+  - target: checkout-web
+    kind: consumes
+related: [checkout-web, checkout-bff]

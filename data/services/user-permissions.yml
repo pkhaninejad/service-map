@@ -1,0 +1,10 @@
+id: user-permissions
+name: User Permissions
+area: identity
+kind: backend
+status: Done / Maintenance
+owner: Platform Team
+tech: [Go, PostgreSQL]
+summary: Stores and evaluates role-based access control rules. Queried by Auth Service on every token validation.
+depends_on: []
+related: [auth-service]

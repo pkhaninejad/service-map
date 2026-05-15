@@ -1,0 +1,15 @@
+id: product-listing-ui
+name: Product Listing UI
+area: catalog
+kind: frontend
+status: In Progress
+owner: Catalog Team
+tech: [React, TypeScript]
+summary: Server-side rendered product listing pages with search, filtering, and sorting. Entry point for browse and discovery.
+depends_on:
+  - target: catalog-bff
+    kind: sync-http
+    via: REST
+  - target: design-system
+    kind: shared-lib
+related: [product-detail-ui, catalog-bff]

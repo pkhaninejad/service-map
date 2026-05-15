@@ -1,0 +1,15 @@
+id: shopper-android
+name: Shopper Android
+area: mobile
+kind: mobile
+status: In Progress
+owner: Mobile Team
+tech: [Kotlin, Android]
+summary: Native Android shopping app covering browse, search, cart, and checkout for end consumers.
+depends_on:
+  - target: mobile-bff
+    kind: sync-http
+    via: HTTPS / GraphQL
+  - target: mobile-component-lib
+    kind: shared-lib
+related: [shopper-ios, mobile-bff]

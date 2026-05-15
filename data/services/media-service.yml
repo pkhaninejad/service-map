@@ -1,0 +1,13 @@
+id: media-service
+name: Media Service
+area: platform
+kind: backend
+status: Done / Maintenance
+owner: Platform Team
+tech: [Go, S3]
+summary: Handles product image upload, resizing, and CDN distribution. All product images are served through this service.
+depends_on:
+  - target: aws-s3-assets
+    kind: sync-http
+    via: AWS SDK
+related: [product-catalog-api]

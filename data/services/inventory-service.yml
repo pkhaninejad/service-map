@@ -1,0 +1,10 @@
+id: inventory-service
+name: Inventory Service
+area: catalog
+kind: backend
+status: In Progress
+owner: Catalog Team
+tech: [Go, PostgreSQL]
+summary: Tracks stock levels per SKU and warehouse. Decrements stock on order placement; replenishes on receipt.
+depends_on: []
+related: [product-catalog-api, order-service]

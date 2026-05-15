@@ -1,0 +1,10 @@
+id: mobile-component-lib
+name: Mobile Component Library
+area: mobile
+kind: library
+status: In Progress
+owner: Mobile Team
+tech: [Kotlin, Swift]
+summary: Shared UI components and styling primitives used across Shopper iOS, Shopper Android, and Seller Android.
+depends_on: []
+related: [shopper-ios, shopper-android, seller-android]

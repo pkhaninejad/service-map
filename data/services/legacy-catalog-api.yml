@@ -1,0 +1,12 @@
+id: legacy-catalog-api
+name: Legacy Catalog API
+area: legacy
+kind: backend
+status: Being Migrated
+owner: Catalog Team
+tech: [PHP, MySQL]
+summary: Original monolithic product catalog. Being decommissioned as traffic migrates to Product Catalog API.
+depends_on:
+  - target: product-catalog-api
+    kind: replaces
+related: [product-catalog-api]

@@ -1,0 +1,22 @@
+id: order-service
+name: Order Service
+area: checkout
+kind: backend
+status: In Progress
+owner: Checkout Team
+tech: [Java, PostgreSQL]
+summary: Owns the order lifecycle from placement through fulfilment handoff. Emits order events consumed by notification and fulfilment services.
+depends_on:
+  - target: payment-gateway
+    kind: sync-http
+    via: REST
+  - target: fulfillment-api
+    kind: sync-http
+    via: REST
+  - target: inventory-service
+    kind: sync-http
+    via: REST
+  - target: notification-service
+    kind: async-event
+    via: Order events (SNS)
+related: [checkout-bff, fulfillment-api, payment-gateway]

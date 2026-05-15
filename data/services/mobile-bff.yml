@@ -1,0 +1,22 @@
+id: mobile-bff
+name: Mobile BFF
+area: mobile
+kind: bff
+status: In Progress
+owner: Mobile Team
+tech: [Node.js, TypeScript, GraphQL]
+summary: GraphQL backend-for-frontend serving all native mobile apps. Aggregates catalog, cart, auth, and order data.
+depends_on:
+  - target: cart-service
+    kind: sync-http
+    via: REST
+  - target: order-service
+    kind: sync-http
+    via: REST
+  - target: auth-service
+    kind: sync-http
+    via: REST / JWT
+  - target: product-catalog-api
+    kind: sync-http
+    via: REST
+related: [shopper-ios, shopper-android, seller-android]

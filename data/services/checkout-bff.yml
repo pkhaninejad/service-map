@@ -1,0 +1,25 @@
+id: checkout-bff
+name: Checkout BFF
+area: checkout
+kind: bff
+status: In Progress
+owner: Checkout Team
+tech: [Node.js, TypeScript]
+summary: Backend-for-frontend aggregating cart, order, promotions, and auth data for the checkout web app.
+depends_on:
+  - target: cart-service
+    kind: sync-http
+    via: REST
+  - target: order-service
+    kind: sync-http
+    via: REST
+  - target: promotions-service
+    kind: sync-http
+    via: REST
+  - target: auth-service
+    kind: sync-http
+    via: REST / JWT
+  - target: google-analytics
+    kind: async-event
+    via: GA4 events
+related: [checkout-web, cart-service, order-service]

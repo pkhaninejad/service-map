@@ -1,0 +1,15 @@
+id: checkout-web
+name: Checkout Web
+area: checkout
+kind: frontend
+status: In Progress
+owner: Checkout Team
+tech: [React, TypeScript]
+summary: Customer-facing checkout flow — cart review, address entry, payment, and order confirmation.
+depends_on:
+  - target: checkout-bff
+    kind: sync-http
+    via: REST
+  - target: design-system
+    kind: shared-lib
+related: [checkout-bff, cart-service]
