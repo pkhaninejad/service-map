@@ -26,3 +26,4 @@ dist-ssr
 # Buyer-local config — copy viz.config.example.yml to create this
 viz.config.yml
 .claude/settings.json
+.playwright-mcp
