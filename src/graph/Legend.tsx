@@ -64,7 +64,7 @@ export function Legend() {
                 Product Area
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-                {AREAS.filter((a) => a !== "External").map((area) => {
+                {AREAS.filter((a) => a !== "external").map((area) => {
                   const s = AREA_COLORS[area];
                   return (
                     <div key={area} style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -88,7 +88,7 @@ export function Legend() {
                       width: 10,
                       height: 10,
                       borderRadius: 3,
-                      background: AREA_COLORS["External"].border,
+                      background: AREA_COLORS["external"].border,
                       flexShrink: 0,
                       display: "inline-block",
                       opacity: 0.6,

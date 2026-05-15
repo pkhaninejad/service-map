@@ -276,7 +276,7 @@ export function FilterSidebar({ graph, filters, onChange, onSelectGroup }: Props
                     }
                     accent={style.border}
                   />
-                  {area !== "External" && (
+                  {area !== "external" && (
                     <button
                       onClick={() => onSelectGroup(area as Area)}
                       title={`Select all ${area} nodes to drag as a group`}
