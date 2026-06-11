@@ -1,0 +1,28 @@
+{
+  "name": "service-map-bug-triage-mcp",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Cross-service bug triage MCP server for the service-map service graph",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "dev": "tsx watch src/server.ts",
+    "start": "tsx src/server.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "dotenv": "^17.4.2",
+    "js-yaml": "^4.1.1",
+    "octokit": "^5.0.5",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^24.12.2",
+    "tsx": "^4.19.2",
+    "typescript": "~6.0.2",
+    "vitest": "^3.2.4"
+  }
+}

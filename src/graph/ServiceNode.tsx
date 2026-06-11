@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { Handle, Position, type NodeProps } from "reactflow";
 import type { Service } from "../schema";
-import { AREA_COLORS, KIND_ICONS, STATUS_STYLES } from "./styles";
+import { AREA_COLORS, KIND_ICONS, STATUS_STYLES, PROBE_BADGE } from "./styles";
 
 export const ServiceNode = memo(({ data, selected }: NodeProps<Service>) => {
   const area = AREA_COLORS[data.area];
@@ -97,6 +97,22 @@ export const ServiceNode = memo(({ data, selected }: NodeProps<Service>) => {
                 }}
               >
                 {data.status}
+              </span>
+            )}
+            {data.probe && (
+              <span
+                title="Live-callable for debugging"
+                style={{
+                  fontSize: 9.5,
+                  fontWeight: 600,
+                  background: PROBE_BADGE.bg,
+                  color: PROBE_BADGE.color,
+                  padding: "1px 6px",
+                  borderRadius: 10,
+                  letterSpacing: "0.02em",
+                }}
+              >
+                {PROBE_BADGE.label}
               </span>
             )}
           </div>

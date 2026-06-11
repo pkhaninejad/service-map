@@ -1,6 +1,7 @@
 import { AREA_COLORS, KIND_ICONS, KIND_LABELS, STATUS_STYLES, EDGE_STYLES } from "../graph/styles";
 import type { Service } from "../schema";
 import { getDevelopedByTeams, getMaintainedByTeams } from "../types";
+import { ProbePanel } from "./ProbePanel";
 
 const DOC_BASE = import.meta.env.VITE_DOC_BASE_URL as string | undefined;
 const GH_ORG = "axel-springer-kugawana";
@@ -339,6 +340,14 @@ export function DetailDrawer({ service, allServices, onClose }: Props) {
               ))}
             </div>
           </Row>
+        )}
+
+        {/* Live probe — only for services marked live-callable */}
+        {service.probe && (
+          <>
+            <hr style={{ border: "none", borderTop: "1px solid #f3f4f6", margin: "2px 0" }} />
+            <ProbePanel service={service} />
+          </>
         )}
       </div>
     </div>

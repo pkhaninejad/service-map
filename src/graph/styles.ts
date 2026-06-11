@@ -7,6 +7,9 @@ export {
   EDGE_STYLES,
 } from "virtual:viz-config";
 
+// Badge for services that are live-callable for debugging (have a probe block).
+export const PROBE_BADGE = { bg: "#fef3c7", border: "#f59e0b", color: "#b45309", label: "⚡ Live" };
+
 export type StatusStyle = { bg: string; color: string };
 
 export const STATUS_STYLES: Record<string, StatusStyle> = {

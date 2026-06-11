@@ -3,6 +3,7 @@ import ReactFlow, {
   Background,
   BackgroundVariant,
   Controls,
+  ControlButton,
   MiniMap,
   MarkerType,
   Panel,
@@ -11,6 +12,7 @@ import ReactFlow, {
   type Node,
   type Edge,
   type NodeMouseHandler,
+  type EdgeMouseHandler,
 } from "reactflow";
 import ELK from "elkjs";
 import "reactflow/dist/style.css";
@@ -22,6 +24,7 @@ import { matchesFilters } from "../types";
 import { AREA_COLORS, EDGE_STYLES } from "./styles";
 import { ServiceNode } from "./ServiceNode";
 import { Legend } from "./Legend";
+import { SettingsModal } from "../settings/SettingsModal";
 
 const elk = new ELK();
 const nodeTypes = { service: ServiceNode };
@@ -124,6 +127,22 @@ function getConnectedChain(nodeId: string, graphEdges: GraphEdge[]): Set<string>
   return result;
 }
 
+// BFS upstream only — the node plus every node that can reach it (its ancestors)
+function getUpstreamChain(nodeId: string, graphEdges: GraphEdge[]): Set<string> {
+  const result = new Set<string>([nodeId]);
+  const queue = [nodeId];
+  while (queue.length) {
+    const curr = queue.shift()!;
+    for (const e of graphEdges) {
+      if (e.target === curr && !result.has(e.source)) {
+        result.add(e.source);
+        queue.push(e.source);
+      }
+    }
+  }
+  return result;
+}
+
 
 interface Props {
   graph: Graph;
@@ -153,7 +172,11 @@ export function Canvas({
   const [loading, setLoading] = useState(true);
   const [relayoutKey, setRelayoutKey] = useState(0);
   const [hoveredNodeId, setHoveredNodeId] = useState<string | null>(null);
+  // Pinned by clicking an edge: the target node + everything upstream of it
+  const [pinnedChain, setPinnedChain] = useState<Set<string> | null>(null);
   const [copied, setCopied] = useState(false);
+  const [legendOpen, setLegendOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   // focusTrigger: non-null = we're in focus mode; holds the node IDs at capture time
   const [focusTrigger, setFocusTrigger] = useState<{
@@ -177,6 +200,7 @@ export function Canvas({
   // Mirror inFocusMode into a ref so the auto-refresh effect can read it
   // without adding focusTrigger to its deps (which would cause a loop).
   const inFocusModeRef = useRef(false);
+  // eslint-disable-next-line react-hooks/refs -- intentional "latest value" ref, read only inside the effect below
   inFocusModeRef.current = inFocusMode;
 
   // Auto-refresh focus layout when filters/search change while in focus mode.
@@ -189,6 +213,7 @@ export function Canvas({
   // ELK layout — re-runs on full reset OR when focus trigger fires
   useEffect(() => {
     if (!graph) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- show spinner while ELK computes the async layout
     setLoading(true);
 
     let nodesToLayout: Service[];
@@ -227,7 +252,6 @@ export function Canvas({
       setEdges(e);
       setLoading(false);
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [relayoutKey, focusTrigger, graph, setNodes, setEdges]);
 
   // Group-select: select all nodes of an area for drag
@@ -242,10 +266,20 @@ export function Canvas({
   }, [groupSelect, setNodes]);
 
   // Hover: compute full connected chain
-  const connectedChain = useMemo<Set<string> | null>(() => {
+  const hoverChain = useMemo<Set<string> | null>(() => {
     if (!hoveredNodeId || !graph) return null;
     return getConnectedChain(hoveredNodeId, graph.edges);
   }, [hoveredNodeId, graph]);
+
+  // Active trace driving dimming: live hover takes precedence, otherwise the
+  // pinned upstream chain from a clicked edge persists until the pane is clicked.
+  const connectedChain = hoverChain ?? pinnedChain;
+
+  // Changing any filter / search clears the pinned selection.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- reset derived selection when inputs change
+    setPinnedChain(null);
+  }, [filters, query]);
 
   // Display nodes
   const displayNodes = useMemo(
@@ -341,8 +375,11 @@ export function Canvas({
 
   // Focus mode helpers
   const enterFocus = useCallback(() => {
-    setFocusTrigger({ ids: new Set(matchingIds), v: Date.now() });
-  }, [matchingIds]);
+    // Prefer the pinned selection if one is active, otherwise the filter matches.
+    const ids = pinnedChain ?? matchingIds;
+    setFocusTrigger({ ids: new Set(ids), v: Date.now() });
+    setPinnedChain(null);
+  }, [pinnedChain, matchingIds]);
 
   const exitFocus = useCallback(() => {
     setFocusTrigger(null);
@@ -350,17 +387,38 @@ export function Canvas({
   }, []);
 
   const resetLayout = useCallback(() => {
+    setPinnedChain(null);
     if (inFocusMode) exitFocus();
     else setRelayoutKey((v) => v + 1);
   }, [inFocusMode, exitFocus]);
 
   // Handlers
   const onNodeClick: NodeMouseHandler = useCallback(
-    (_evt, node) =>
-      onNodeSelect(selectedNodeId === node.id ? null : (node.data as Service)),
-    [onNodeSelect, selectedNodeId],
+    (_evt, node) => {
+      const deselecting = selectedNodeId === node.id;
+      onNodeSelect(deselecting ? null : (node.data as Service));
+      // Pin the node's connected chain so it stays highlighted (others faded)
+      // until the pane is clicked or the view is reset. Clicking the same node
+      // again clears it.
+      setPinnedChain(
+        deselecting ? null : getConnectedChain(node.id, graph.edges),
+      );
+    },
+    [onNodeSelect, selectedNodeId, graph],
   );
-  const onPaneClick = useCallback(() => onNodeSelect(null), [onNodeSelect]);
+  const onPaneClick = useCallback(() => {
+    onNodeSelect(null);
+    setPinnedChain(null);
+  }, [onNodeSelect]);
+  // Click an edge: highlight the target node plus everything upstream that
+  // reaches it. Stays pinned until the user clicks empty canvas.
+  const onEdgeClick: EdgeMouseHandler = useCallback(
+    (evt, edge) => {
+      evt.stopPropagation();
+      setPinnedChain(getUpstreamChain(edge.target, graph.edges));
+    },
+    [graph],
+  );
   const onNodeMouseEnter: NodeMouseHandler = useCallback(
     (_evt, node) => setHoveredNodeId(node.id),
     [],
@@ -411,6 +469,7 @@ export function Canvas({
       edges={displayEdges}
       onNodesChange={onNodesChange}
       onNodeClick={onNodeClick}
+      onEdgeClick={onEdgeClick}
       onPaneClick={onPaneClick}
       onNodeMouseEnter={onNodeMouseEnter}
       onNodeMouseLeave={onNodeMouseLeave}
@@ -423,12 +482,26 @@ export function Canvas({
     >
       <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="#cbd5e1" />
       <Controls
+        showInteractive={false}
         style={{
           boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
           borderRadius: 8,
           border: "1px solid #e5e7eb",
         }}
-      />
+      >
+        <ControlButton
+          onClick={() => setLegendOpen((v) => !v)}
+          title="Toggle legend"
+          style={{ background: legendOpen ? "#f0f9ff" : undefined }}
+        >
+          <svg viewBox="0 0 16 16" width={14} height={14} fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round">
+            <rect x={1} y={2} width={5} height={5} rx={1} />
+            <rect x={1} y={9} width={5} height={5} rx={1} />
+            <line x1={9} y1={4.5} x2={15} y2={4.5} />
+            <line x1={9} y1={11.5} x2={15} y2={11.5} />
+          </svg>
+        </ControlButton>
+      </Controls>
       <MiniMap
         nodeColor={(n) => {
           const s = n.data as Service | undefined;
@@ -559,7 +632,7 @@ export function Canvas({
           }}
         >
           {/* Match count / focus entry point */}
-          {hasActiveFilter && !inFocusMode && (
+          {hasActiveFilter && !inFocusMode && !pinnedChain && (
             <div
               style={{
                 display: "flex",
@@ -629,21 +702,58 @@ export function Canvas({
             </div>
           )}
 
-          {/* Hover trace count */}
+          {/* Hover / pinned trace count — with a focus entry point when pinned */}
           {connectedChain !== null && (
             <div
               style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
                 background: "#fff",
                 border: "1px solid #e5e7eb",
                 borderRadius: 20,
-                padding: "5px 12px",
-                fontSize: 11.5,
-                color: "#374151",
                 boxShadow: "0 2px 8px rgba(0,0,0,0.07)",
+                overflow: "hidden",
               }}
             >
-              <strong style={{ color: "#111827" }}>{connectedChain.size}</strong>{" "}
-              connected
+              <span
+                style={{
+                  padding: "5px 12px",
+                  fontSize: 11.5,
+                  color: "#374151",
+                  borderRight: pinnedChain && !inFocusMode ? "1px solid #e5e7eb" : undefined,
+                }}
+              >
+                <strong style={{ color: "#111827" }}>{connectedChain.size}</strong>{" "}
+                connected
+              </span>
+              {pinnedChain && !inFocusMode && (
+                <button
+                  onClick={enterFocus}
+                  title="Re-layout only the pinned services so connections are clear"
+                  style={{
+                    all: "unset",
+                    cursor: "pointer",
+                    padding: "5px 11px",
+                    fontSize: 11.5,
+                    fontWeight: 600,
+                    color: "#2563eb",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 4,
+                    background: "#eff6ff",
+                    transition: "background 0.1s",
+                  }}
+                  onMouseEnter={(e) =>
+                    ((e.currentTarget as HTMLButtonElement).style.background = "#dbeafe")
+                  }
+                  onMouseLeave={(e) =>
+                    ((e.currentTarget as HTMLButtonElement).style.background = "#eff6ff")
+                  }
+                >
+                  ⊹ Focus view
+                </button>
+              )}
             </div>
           )}
 
@@ -666,10 +776,22 @@ export function Canvas({
           >
             <span style={{ fontSize: 12 }}>{copied ? "✓" : "🔗"}</span>
           </IconButton>
+
+          <IconButton
+            title="Setup — repos & Claude prompt"
+            active={settingsOpen}
+            onClick={() => setSettingsOpen(true)}
+          >
+            <svg viewBox="0 0 16 16" width={13} height={13} fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+              <circle cx={8} cy={8} r={2.5} />
+              <path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3.05 3.05l1.06 1.06M11.89 11.89l1.06 1.06M12.95 3.05l-1.06 1.06M4.11 11.89l-1.06 1.06" />
+            </svg>
+          </IconButton>
         </div>
       </Panel>
 
-      <Legend />
+      <Legend open={legendOpen} nodes={graph.nodes} />
+      <SettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
     </ReactFlow>
   );
 }
