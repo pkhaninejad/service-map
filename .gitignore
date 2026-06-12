@@ -34,3 +34,6 @@ viz.config.yml
 .claude/settings.json
 .claude/worktrees/
 .playwright-mcp
+
+# Internal design docs — not for public repo
+/docs
