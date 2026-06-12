@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# MCP server local state — never commit secrets or cloned repos
+server/.env
+server/repos/
+server/probes.local.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -26,4 +31,5 @@ dist-ssr
 # Buyer-local config — copy viz.config.example.yml to create this
 viz.config.yml
 .claude/settings.json
+.claude/worktrees/
 .playwright-mcp

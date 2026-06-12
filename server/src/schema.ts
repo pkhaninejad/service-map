@@ -1,12 +1,20 @@
 import { z } from "zod";
-import { AREAS, KINDS, STATUSES, EDGE_KINDS } from "virtual:viz-config";
 
-export { AREAS, KINDS, STATUSES, EDGE_KINDS };
+/**
+ * Server-side service schema.
+ *
+ * The web app's schema (src/schema.ts) validates `area`/`kind`/`status` against
+ * the enums generated from viz.config.yml via a Vite virtual module — which is
+ * unavailable in this plain-Node (tsx/vitest) runtime. The server therefore
+ * keeps a config-agnostic copy that treats those fields as free strings, so it
+ * can read whatever data set the repo is configured with. The probe shape is
+ * the part the MCP server actually cares about and is kept identical.
+ */
 
 export const DependencySchema = z.object({
   target: z.string(),
   via: z.string().optional(),
-  kind: z.enum(EDGE_KINDS as [string, ...string[]]),
+  kind: z.string(),
 });
 
 export const PROBE_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE"] as const;
@@ -36,9 +44,9 @@ export const ProbeSchema = z.object({
 export const ServiceSchema = z.object({
   id: z.string().regex(/^[a-z0-9-]+$/, "id must be kebab-case"),
   name: z.string(),
-  area: z.enum(AREAS as [string, ...string[]]),
-  kind: z.enum(KINDS as [string, ...string[]]),
-  status: z.enum(STATUSES as [string, ...string[]]).optional(),
+  area: z.string(),
+  kind: z.string(),
+  status: z.string().optional(),
   maintainerTeam: z.string().optional(),
   owner: z.string().optional(),
   developedBy: z.array(z.string()).default([]),
@@ -54,14 +62,7 @@ export const ServiceSchema = z.object({
   probe: ProbeSchema.optional(),
 });
 
-export const ExternalSchema = ServiceSchema.extend({
-  external: z.literal(true),
-});
-
 export type Service = z.infer<typeof ServiceSchema>;
 export type Dependency = z.infer<typeof DependencySchema>;
 export type Probe = z.infer<typeof ProbeSchema>;
 export type ProbeOperation = z.infer<typeof ProbeOperationSchema>;
-export type Area = string;
-export type Kind = string;
-export type EdgeKind = string;

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "service-map-bug-triage": {
+      "type": "http",
+      "url": "http://localhost:47821"
+    }
+  }
+}
