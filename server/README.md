@@ -29,10 +29,23 @@ An [MCP](https://modelcontextprotocol.io) server that lets an AI client (Claude 
 |---|---|---|---|
 | `GITHUB_TOKEN` | yes | — | Fine-grained PAT or GitHub App token. Read-only Contents + Metadata on the org's repos. |
 | `GITHUB_OWNER` | yes | — | GitHub org/owner (e.g. `your-org`). |
+| `LICENSE_KEY` | yes | — | License key. Personal/community use is free; enterprise/production is paid. The server refuses to start without a valid license. |
+| `LICENSE_DOMAIN` | no | `GITHUB_OWNER` | Domain the license is bound to. |
 | `PORT` | no | `47821` | HTTP port. |
 | `DATA_DIR` | no | `../data` | Path to the directory containing `services/` and `externals.yml`. |
 
 The server exits immediately on startup if any required variable is missing.
+
+## Licensing
+
+service-map is **source-available**: free for personal and community/non-production
+use, paid for enterprise/production use. Every install needs a license key.
+
+1. Get a key (free or enterprise): <https://wallstrdev.com/product/service-map-interactive-microservice-dependency-visualization-tool/>
+2. Set `LICENSE_KEY` (and optionally `LICENSE_DOMAIN`) in `server/.env`.
+3. The server validates on startup, then caches the result. A valid license keeps
+   working for up to **7 days offline** before it must re-validate; an
+   invalid/expired/missing license stops the server.
 
 ## Running locally
 

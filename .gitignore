@@ -16,6 +16,7 @@ dist-ssr
 server/.env
 server/repos/
 server/probes.local.json
+server/.license-cache.json
 
 # Editor directories and files
 .vscode/*

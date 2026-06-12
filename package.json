@@ -8,6 +8,7 @@
     "dev:all": "concurrently --names \"viz,mcp\" --prefix-colors \"cyan,yellow\" \"pnpm dev\" \"pnpm --dir server dev\"",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "test": "vitest run",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -32,6 +33,7 @@
     "globals": "^17.5.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.58.2",
-    "vite": "^8.0.10"
+    "vite": "^8.0.10",
+    "vitest": "^3.2.4"
   }
 }
