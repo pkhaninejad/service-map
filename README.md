@@ -187,6 +187,41 @@ Your `viz.config.yml` and data files are never modified by upstream changes.
 
 ---
 
-## License
+## License & activation
 
-See [LICENSES](./LICENSES) for all dependency licences, including the EPL-2.0 notice for elkjs.
+Service Map is **source-available** under the Business Source License 1.1 (BUSL-1.1). It is free for personal, educational, evaluation, and non-production community use. Enterprise and production use requires a commercial license. The license converts to Apache-2.0 on 2030-06-12.
+
+> Source-available is not the same as open source (OSI definition). Review [LICENSE](./LICENSE) before commercial use.
+
+### Get a license key
+
+Every install — free or paid — needs a license key for activation (this doubles as lead capture so we can support you).
+
+| Tier | Link |
+|---|---|
+| **Community / personal (free)** | <https://wallstrdev.com/product/service-map-interactive-microservice-dependency-visualization-tool-community-version/> |
+| **Enterprise / production (paid)** | <https://wallstrdev.com/product/service-map-interactive-microservice-dependency-visualization-tool/> |
+
+### Activate the web UI
+
+1. Open the app in your browser.
+2. You will see the activation screen on first load.
+3. Paste your license key and click **Verify**.
+4. The app unlocks immediately. The key is cached locally; background re-validation happens every 24 hours with a 7-day offline grace period.
+
+To change or remove your key later: open **Settings → License**.
+
+### Activate the MCP server
+
+Set the following in `server/.env`:
+
+```dotenv
+LICENSE_KEY=your-key-here
+# LICENSE_DOMAIN=your-company.com   # defaults to GITHUB_OWNER if unset
+```
+
+The server validates the key on startup. With a valid cached result it keeps running for up to 7 days without network access. An invalid or missing key causes the server to exit with activation instructions.
+
+---
+
+See [LICENSES](./LICENSES) for third-party dependency licences, including the EPL-2.0 notice for elkjs.

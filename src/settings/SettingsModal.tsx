@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { AREAS, KINDS, STATUSES, EDGE_KINDS } from "../schema";
+import { useLicense } from "../license/LicenseProvider";
+import { FREE_URL, ENTERPRISE_URL } from "../license/config";
 
 // ── localStorage ─────────────────────────────────────────────────────────────
 
@@ -159,7 +161,7 @@ interface Props {
   onClose: () => void;
 }
 
-type Tab = "repos" | "prompt";
+type Tab = "repos" | "prompt" | "license";
 type SyncState = "idle" | "syncing" | "done" | "error";
 type RunState = "idle" | "running" | "done" | "error";
 
@@ -324,7 +326,7 @@ export function SettingsModal({ open, onClose }: Props) {
             borderBottom: "1px solid #f3f4f6",
           }}
         >
-          {(["repos", "prompt"] as Tab[]).map((t) => (
+          {(["repos", "prompt", "license"] as Tab[]).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -339,7 +341,7 @@ export function SettingsModal({ open, onClose }: Props) {
                 marginBottom: -1,
               }}
             >
-              {t === "repos" ? "Repositories" : "Generate Prompt"}
+              {t === "repos" ? "Repositories" : t === "prompt" ? "Generate Prompt" : "License"}
             </button>
           ))}
         </div>
@@ -523,7 +525,79 @@ export function SettingsModal({ open, onClose }: Props) {
               </details>
             </div>
           )}
+
+          {tab === "license" && <LicensePanel />}
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ── License panel ─────────────────────────────────────────────────────────────
+
+function LicensePanel() {
+  const { status, tier, expires, reason, licenseKey, activate, deactivate, checking, error } = useLicense();
+  const [input, setInput] = useState("");
+
+  const active = status === "valid";
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          padding: "12px 14px",
+          borderRadius: 10,
+          background: active ? "#f0fdf4" : "#fef2f2",
+          border: `1px solid ${active ? "#bbf7d0" : "#fecaca"}`,
+        }}
+      >
+        <span style={{ fontSize: 18 }}>{active ? "✓" : "✕"}</span>
+        <div style={{ fontSize: 12.5, color: "#374151" }}>
+          <div style={{ fontWeight: 600 }}>
+            {active ? `Active — ${tier} tier` : "Not activated"}
+          </div>
+          {active && expires && <div style={{ color: "#6b7280" }}>Expires {expires}</div>}
+          {!active && reason && <div style={{ color: "#b91c1c" }}>{reason}</div>}
+        </div>
+      </div>
+
+      <Field label="License key" hint="Personal & community use is free; enterprise/production is paid.">
+        <input
+          type="text"
+          value={input || licenseKey}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="SM-XXXX-XXXX-XXXX"
+          style={{ ...inputStyle, fontFamily: "monospace" }}
+        />
+      </Field>
+
+      {error && <div style={{ fontSize: 12, color: "#b91c1c" }}>{error}</div>}
+
+      <div style={{ display: "flex", gap: 8 }}>
+        <button
+          onClick={() => activate(input || licenseKey)}
+          disabled={checking}
+          style={{ ...secondaryBtn, opacity: checking ? 0.6 : 1 }}
+        >
+          {checking ? "Verifying…" : active ? "Re-verify" : "Activate"}
+        </button>
+        {licenseKey && (
+          <button onClick={() => { deactivate(); setInput(""); }} style={secondaryBtn}>
+            Remove key
+          </button>
+        )}
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 6, paddingTop: 6, borderTop: "1px solid #f3f4f6" }}>
+        <a href={FREE_URL} target="_blank" rel="noreferrer" style={{ fontSize: 12.5, color: "#2563eb", textDecoration: "none" }}>
+          → Get a free license
+        </a>
+        <a href={ENTERPRISE_URL} target="_blank" rel="noreferrer" style={{ fontSize: 12.5, color: "#2563eb", textDecoration: "none" }}>
+          → Buy an enterprise license
+        </a>
       </div>
     </div>
   );

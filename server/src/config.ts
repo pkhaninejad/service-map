@@ -1,4 +1,5 @@
 import path from "node:path";
+import { normalizeDomain } from "./license";
 
 export type Config = {
   githubToken: string;
@@ -6,6 +7,8 @@ export type Config = {
   dataRepo: string;
   port: number;
   dataDir: string;
+  licenseKey: string;
+  licenseDomain: string;
 };
 
 export function loadConfig(): Config {
@@ -28,5 +31,9 @@ export function loadConfig(): Config {
     dataRepo: process.env.DATA_REPO ?? "service-map",
     port: process.env.PORT ? parseInt(process.env.PORT, 10) : 47821,
     dataDir: process.env.DATA_DIR ?? path.resolve("../data"),
+    licenseKey: process.env.LICENSE_KEY ?? "",
+    licenseDomain: normalizeDomain(
+      process.env.LICENSE_DOMAIN ?? process.env.GITHUB_OWNER!,
+    ),
   };
 }

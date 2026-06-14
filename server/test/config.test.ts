@@ -5,7 +5,7 @@ describe("loadConfig", () => {
     env: Record<string, string | undefined>,
     fn: () => unknown,
   ) {
-    const keys = ["GITHUB_TOKEN", "GITHUB_OWNER", "PORT", "DATA_DIR"];
+    const keys = ["GITHUB_TOKEN", "GITHUB_OWNER", "PORT", "DATA_DIR", "LICENSE_KEY", "LICENSE_DOMAIN"];
     const saved: Record<string, string | undefined> = {};
     for (const k of keys) {
       saved[k] = process.env[k];
@@ -71,5 +71,25 @@ describe("loadConfig", () => {
       loadConfig(),
     );
     expect((cfg as { dataDir: string }).dataDir).toBe("/custom/data");
+  });
+
+  test("reads LICENSE_KEY from env (empty by default)", async () => {
+    const loadConfig = await getLoadConfig();
+    const a = withEnv(valid, () => loadConfig()) as { licenseKey: string };
+    expect(a.licenseKey).toBe("");
+    const b = withEnv({ ...valid, LICENSE_KEY: "LK-1" }, () => loadConfig()) as { licenseKey: string };
+    expect(b.licenseKey).toBe("LK-1");
+  });
+
+  test("licenseDomain defaults to the normalized GITHUB_OWNER", async () => {
+    const loadConfig = await getLoadConfig();
+    const cfg = withEnv({ ...valid, GITHUB_OWNER: "My-Org" }, () => loadConfig()) as { licenseDomain: string };
+    expect(cfg.licenseDomain).toBe("my-org");
+  });
+
+  test("LICENSE_DOMAIN overrides the default", async () => {
+    const loadConfig = await getLoadConfig();
+    const cfg = withEnv({ ...valid, LICENSE_DOMAIN: "https://www.Acme.com/" }, () => loadConfig()) as { licenseDomain: string };
+    expect(cfg.licenseDomain).toBe("acme.com");
   });
 });

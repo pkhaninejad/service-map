@@ -16,8 +16,42 @@ import { createProbeClient, saveProbeSecret, configuredProfiles, type Profile } 
 import { syncRepos, REPOS_DIR } from "./api/syncRepos.js";
 import { runClaude } from "./api/runClaude.js";
 import { saveService } from "./api/saveService.js";
+import { resolveLicense } from "./license.js";
 
 const config = loadConfig();
+
+// ── License gate ──────────────────────────────────────────────────────────────
+// Real enforcement point: the server an enterprise deploys refuses to run
+// without a valid license. Personal/community use is free but still needs a
+// (free) key. A valid cached license keeps working for up to 7 days offline.
+const LICENSE_CACHE = path.resolve(".license-cache.json");
+const license = await resolveLicense({
+  key: config.licenseKey,
+  domain: config.licenseDomain,
+  cacheFile: LICENSE_CACHE,
+});
+
+if (!license.active) {
+  console.error(
+    [
+      "",
+      "  ✖ service-map MCP server — no valid license.",
+      `    Reason: ${license.reason ?? "unlicensed"}`,
+      "",
+      "    This server requires a license to run.",
+      "    Personal & community use is free; enterprise/production use is paid.",
+      "",
+      "      1. Get a license (free or enterprise):",
+      "         https://wallstrdev.com/product/service-map-interactive-microservice-dependency-visualization-tool/",
+      "      2. Set LICENSE_KEY (and optionally LICENSE_DOMAIN) in server/.env",
+      "      3. Restart the server.",
+      "",
+    ].join("\n"),
+  );
+  process.exit(1);
+}
+
+console.log(`[license] active — ${license.tier} tier`);
 
 const dataDir = path.resolve(config.dataDir);
 const graph = loadGraphFs(dataDir);
