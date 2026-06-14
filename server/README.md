@@ -41,7 +41,9 @@ The server exits immediately on startup if any required variable is missing.
 service-map is **source-available**: free for personal and community/non-production
 use, paid for enterprise/production use. Every install needs a license key.
 
-1. Get a key (free or enterprise): <https://wallstrdev.com/product/service-map-interactive-microservice-dependency-visualization-tool/>
+1. Get a key:
+   - **Community / personal (free):** <https://wallstrdev.com/product/service-map-interactive-microservice-dependency-visualization-tool-community-version/>
+   - **Enterprise / production (paid):** <https://wallstrdev.com/product/service-map-interactive-microservice-dependency-visualization-tool/>
 2. Set `LICENSE_KEY` (and optionally `LICENSE_DOMAIN`) in `server/.env`.
 3. The server validates on startup, then caches the result. A valid license keeps
    working for up to **7 days offline** before it must re-validate; an

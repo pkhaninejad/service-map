@@ -13,10 +13,7 @@ export const ENTERPRISE_URL =
   env.VITE_LICENSE_ENTERPRISE_URL ??
   "https://wallstrdev.com/product/service-map-interactive-microservice-dependency-visualization-tool/";
 
-/**
- * Where to get a free personal/community license.
- * TODO: replace with the real free-license product URL once it exists.
- */
+/** Where to get a free personal/community license. */
 export const FREE_URL =
   env.VITE_LICENSE_FREE_URL ??
-  "https://wallstrdev.com/product/service-map-free/";
+  "https://wallstrdev.com/product/service-map-interactive-microservice-dependency-visualization-tool-community-version/";

@@ -197,7 +197,10 @@ Service Map is **source-available** under the Business Source License 1.1 (BUSL-
 
 Every install — free or paid — needs a license key for activation (this doubles as lead capture so we can support you).
 
-Get your key at: **<https://wallstrdev.com/product/service-map-interactive-microservice-dependency-visualization-tool/>**
+| Tier | Link |
+|---|---|
+| **Community / personal (free)** | <https://wallstrdev.com/product/service-map-interactive-microservice-dependency-visualization-tool-community-version/> |
+| **Enterprise / production (paid)** | <https://wallstrdev.com/product/service-map-interactive-microservice-dependency-visualization-tool/> |
 
 ### Activate the web UI
 
