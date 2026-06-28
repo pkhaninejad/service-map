@@ -46,7 +46,7 @@ export async function validateRemote(
     const res = await fetchFn(LICENSE_SERVER_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ key, domain }),
+      body: JSON.stringify({ key, domain, product: "service-map" }),
     });
     const body: unknown = await res.json();
     if (!body || typeof body !== "object") return null;
